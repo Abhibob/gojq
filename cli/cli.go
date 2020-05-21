@@ -249,7 +249,7 @@ func (cli *Cli) createInputIter(args []string) inputIter {
 		newIter = newSlurpInputIter(newIter)
 	}
 	if len(args) == 0 {
-		return newIter(cli.inStream, "<stdin>")
+		return newIter(cli.InStream, "<stdin>")
 	}
 	return newFilesInputIter(newIter, args)
 }
@@ -276,7 +276,7 @@ func (cli *Cli) process(iter inputIter, code *gojq.Code) error {
 func (cli *Cli) printValues(v gojq.Iter) error {
 	m := cli.createMarshaler()
 	for {
-		m, outStream := m, cli.outStream
+		m, outStream := m, cli.OutStream
 		x, ok := v.Next()
 		if !ok {
 			break
@@ -286,7 +286,7 @@ func (cli *Cli) printValues(v gojq.Iter) error {
 			return v
 		case [2]interface{}:
 			if s, ok := v[0].(string); ok {
-				outStream = cli.errStream
+				outStream = cli.ErrStream
 				compact := cli.outputCompact
 				cli.outputCompact = true
 				m = cli.createMarshaler()
@@ -347,7 +347,7 @@ func (cli *Cli) createMarshaler() marshaler {
 
 func (cli *Cli) printError(err error) {
 	if er, ok := err.(interface{ IsEmptyError() bool }); !ok || !er.IsEmptyError() {
-		fmt.Fprintf(cli.errStream, "%s: %s\n", name, err)
+		fmt.Fprintf(cli.ErrStream, "%s: %s\n", name, err)
 	}
 }
 
