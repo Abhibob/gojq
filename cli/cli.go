@@ -31,7 +31,7 @@ const (
 	exitCodeDefaultErr
 )
 
-type cli struct {
+type Cli struct {
 	InStream  io.Reader
 	OutStream io.Writer
 	ErrStream io.Writer
@@ -80,7 +80,7 @@ type flagopts struct {
 
 var addDefaultModulePaths = true
 
-func (cli *cli) run(args []string) int {
+func (cli *Cli) run(args []string) int {
 	if err := cli.runInternal(args); err != nil {
 		cli.printError(err)
 		if err, ok := err.(interface{ ExitCode() int }); ok {
@@ -91,7 +91,7 @@ func (cli *cli) run(args []string) int {
 	return exitCodeOK
 }
 
-func (cli *cli) runInternal(args []string) (err error) {
+func (cli *Cli) runInternal(args []string) (err error) {
 	var opts flagopts
 	args, err = flags.NewParser(
 		&opts, flags.HelpFlag|flags.PassDoubleDash,
@@ -229,7 +229,7 @@ func slurpFile(name string) (interface{}, error) {
 	return val, nil
 }
 
-func (cli *cli) createInputIter(args []string) inputIter {
+func (cli *Cli) createInputIter(args []string) inputIter {
 	var newIter func(io.Reader, string) inputIter
 	switch {
 	case cli.inputRaw:
@@ -254,7 +254,7 @@ func (cli *cli) createInputIter(args []string) inputIter {
 	return newFilesInputIter(newIter, args)
 }
 
-func (cli *cli) process(iter inputIter, code *gojq.Code) error {
+func (cli *Cli) process(iter inputIter, code *gojq.Code) error {
 	var err error
 	for {
 		v, ok := iter.Next()
@@ -273,7 +273,7 @@ func (cli *cli) process(iter inputIter, code *gojq.Code) error {
 	}
 }
 
-func (cli *cli) printValues(v gojq.Iter) error {
+func (cli *Cli) printValues(v gojq.Iter) error {
 	m := cli.createMarshaler()
 	for {
 		m, outStream := m, cli.outStream
@@ -323,7 +323,7 @@ func (cli *cli) printValues(v gojq.Iter) error {
 	return nil
 }
 
-func (cli *cli) createMarshaler() marshaler {
+func (cli *Cli) createMarshaler() marshaler {
 	if cli.outputYAML {
 		return yamlFormatter(cli.outputIndent)
 	}
@@ -345,7 +345,7 @@ func (cli *cli) createMarshaler() marshaler {
 	return f
 }
 
-func (cli *cli) printError(err error) {
+func (cli *Cli) printError(err error) {
 	if er, ok := err.(interface{ IsEmptyError() bool }); !ok || !er.IsEmptyError() {
 		fmt.Fprintf(cli.errStream, "%s: %s\n", name, err)
 	}
