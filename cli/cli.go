@@ -80,7 +80,7 @@ type flagopts struct {
 
 var addDefaultModulePaths = true
 
-func (cli *Cli) run(args []string) int {
+func (cli *Cli) Run(args []string) int {
 	if err := cli.runInternal(args); err != nil {
 		cli.printError(err)
 		if err, ok := err.(interface{ ExitCode() int }); ok {
