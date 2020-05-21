@@ -32,9 +32,9 @@ const (
 )
 
 type cli struct {
-	inStream  io.Reader
-	outStream io.Writer
-	errStream io.Writer
+	InStream  io.Reader
+	OutStream io.Writer
+	ErrStream io.Writer
 
 	outputCompact bool
 	outputRaw     bool
