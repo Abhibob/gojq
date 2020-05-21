@@ -98,7 +98,7 @@ func (cli *Cli) runInternal(args []string) (err error) {
 	).ParseArgs(args)
 	if err != nil {
 		if err, ok := err.(*flags.Error); ok && err.Type == flags.ErrHelp {
-			fmt.Fprintf(cli.outStream, `%[1]s - Go implementation of jq
+			fmt.Fprintf(cli.OutStream, `%[1]s - Go implementation of jq
 
 Version: %s (rev: %s/%s)
 
@@ -107,13 +107,13 @@ Synopsis:
 
 `,
 				name, version, revision, runtime.Version())
-			fmt.Fprintln(cli.outStream, err.Error())
+			fmt.Fprintln(cli.OutStream, err.Error())
 			return nil
 		}
 		return &flagParseError{err}
 	}
 	if opts.Version {
-		fmt.Fprintf(cli.outStream, "%s %s (rev: %s/%s)\n", name, version, revision, runtime.Version())
+		fmt.Fprintf(cli.OutStream, "%s %s (rev: %s/%s)\n", name, version, revision, runtime.Version())
 		return nil
 	}
 	cli.outputCompact, cli.outputRaw, cli.outputJoin, cli.outputNul, cli.outputYAML, cli.outputIndent =
@@ -124,7 +124,7 @@ Synopsis:
 	} else if opts.OutputColor || opts.OutputMono {
 		color.NoColor = opts.OutputMono
 	} else {
-		color.NoColor = !isTTY(cli.outStream)
+		color.NoColor = !isTTY(cli.OutStream)
 	}
 	if i := cli.outputIndent; i != nil {
 		if *i > 9 {
