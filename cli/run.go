@@ -5,8 +5,8 @@ import "os"
 // Run gojq.
 func Run() int {
 	return (&cli{
-		inStream:  os.Stdin,
-		outStream: os.Stdout,
-		errStream: os.Stderr,
+		InStream:  os.Stdin,
+		OutStream: os.Stdout,
+		ErrStream: os.Stderr,
 	}).run(os.Args[1:])
 }
